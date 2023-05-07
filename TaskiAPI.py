@@ -36,14 +36,16 @@ def handle_list(list_id):
         for i in todo_lists:
             if i['id'] == list_id:
                 print("Wird entfernt: {}".format(i['id']))
-                todo_lists.remove(list_id)
-        return "Wurde entfernt", 200
+                todo_lists.remove(i)
+        return "Wurde entfernt",200
     
 @app.route('/todo-list', methods=['POST'])
 def createList():
     new_list = request.get_json()
     print('Got new list to be added: {}'.format(new_list))
     new_list['id'] = uuid.uuid4()
+    #new_list['name'] = 
+    print(new_list)
     todo_lists.append(new_list)
     return jsonify(new_list), 200
 
