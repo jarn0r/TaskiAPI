@@ -1,0 +1,250 @@
+openapi: 3.0.1
+info:
+  title: TODO List mit Flask
+  description: Parameterübergabe mit GET und POST
+  contact:
+    email: wichmann@bbs-os-brinkstr.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: '0.1'
+servers:
+  - url: http://127.0.0.1:5000
+tags:
+  - name: List
+    description: Methoden die die Liste selbst bearbeiten
+  - name: Entry
+    description: Methoden die die Listeneinträge bearbeiten
+paths:
+  /todolist/{list_id}:
+    get:
+      summary: Liefert alle Einträge der Liste zurück
+      description: Liefert alle Einträge einer Todo-Liste zurück.
+      operationId: getTodoList
+      tags:
+        - List
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ListEntries'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+  /todo-list:
+    post:
+      summary: Erstellung Liste
+      description: Fügt eine neue Todo-Liste hinzu
+      operationId: post
+      tags:
+        - List
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewList'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TodoEntry'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+  /todo-list/{list_id}:
+    delete:
+      summary: Löscht Liste
+      description: Löscht eine komplette Todo-Liste mit allen Einträgen.
+      tags:
+        - List
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/200delete'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+  /todo-list/{list_id}/entry/{entry_id}:
+    post:
+      summary: Neuer Eintrag in Liste
+      description: Fügt einen Eintrag zu einer bestehenden Todo-Liste hinzu.
+      tags:
+        - Entry
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: entry_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoEntry'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TodoEntryBack'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+    put:
+      summary: Updates Entry
+      description: Aktualisiert einen bestehenden Eintrag
+      tags:
+        - Entry
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: entry_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TodoEntry'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TodoEntryBack'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+    delete:
+      summary: Deletes Entry
+      description: Löscht einen einzelnen Eintrag einer Todo-Liste.
+      tags:
+        - Entry
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: path
+          name: entry_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/200delete'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+components:
+  schemas:
+    ListEntries:
+      type: array
+      items:
+        type: object
+        properties:
+          entry:
+            type: string
+    NewList:
+      type: object
+      properties:
+        name:
+          type: string
+    TodoEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        beschreibung:
+          type: string
+    TodoEntryBack:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        beschreibung:
+          type: string
+  responses:
+    '400':
+      description: Fehlerhafte Daten übergeben
+    '405':
+      description: Gewünschte Methode ist nicht auf diesem Endpunkt erlaubt
+    200delete:
+      description: Löschen war erfolgreich
+    404NotFound:
+      description: Wrong ID
