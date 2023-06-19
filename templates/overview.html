@@ -1,0 +1,16 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Overview deiner Todos-Lists</h1>
+    <ul>
+        {% for todo in todo_lists %}
+        <li>Name :{{ todo.name }} -  ID: {{ todo.id }} - <a href="http://127.0.0.1:5000/todolist/{{todo.id}}">Ansehen</a></li>
+        {% endfor %}
+    </ul>
+    Zurück zum <a href="http://127.0.0.1:5000/">Index</a>
+</body>
+</html>

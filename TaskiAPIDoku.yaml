@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: TODO List mit Flask
-  description: Parameterübergabe mit GET und POST
+  description: Parameterübergabe mit GET und POST und etwas HTMl, bitte besuchen Sie die Index Seite sieh unter Server. Bitte beachten Sie das Index und die Get Requests über HTMl laufen und nicht mehr über JSON. Dazu weiß ich nicht warum die Dokumentations Requests nicht funktionieren wollen, an sich währen die richtig
   contact:
     email: wichmann@bbs-os-brinkstr.de
   license:
@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: '0.1'
 servers:
-  - url: http://127.0.0.1:5000
+  - url: http://127.0.0.1:5000/
 tags:
   - name: List
     description: Methoden die die Liste selbst bearbeiten
@@ -19,7 +19,7 @@ paths:
   /todolist/{list_id}:
     get:
       summary: Liefert alle Einträge der Liste zurück
-      description: Liefert alle Einträge einer Todo-Liste zurück.
+      description: Liefert alle Einträge einer todoliste zurück.
       operationId: getTodoList
       tags:
         - List
@@ -34,22 +34,36 @@ paths:
         '200':
           description: Successful response
           content:
-            application/json:
+            text/html:
               schema:
-                type: object
-                properties:
-                  entries:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ListEntries'
+                type: string
         '404':
           $ref: '#/components/responses/404NotFound'
         '405':
           $ref: '#/components/responses/405'
-  /todo-list:
+    delete:
+      summary: Löscht Liste
+      description: Löscht eine komplette todoliste mit allen Einträgen.
+      tags:
+        - List
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/200delete'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405'
+  /todolist:
     post:
       summary: Erstellung Liste
-      description: Fügt eine neue Todo-Liste hinzu
+      description: Fügt eine neue todoliste hinzu
       operationId: post
       tags:
         - List
@@ -70,37 +84,18 @@ paths:
                   entries:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TodoEntry'
+                      $ref: '#/components/schemas/accNewList'
         '400':
           $ref: '#/components/responses/400'
         '404':
           $ref: '#/components/responses/404NotFound'
         '405':
           $ref: '#/components/responses/405'
-  /todo-list/{list_id}:
-    delete:
-      summary: Löscht Liste
-      description: Löscht eine komplette Todo-Liste mit allen Einträgen.
-      tags:
-        - List
-      parameters:
-        - in: path
-          name: list_id
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          $ref: '#/components/responses/200delete'
-        '404':
-          $ref: '#/components/responses/404NotFound'
-        '405':
-          $ref: '#/components/responses/405'
-  /todo-list/{list_id}/entry/{entry_id}:
+
+  /todolist/{list_id}/entry:
     post:
       summary: Neuer Eintrag in Liste
-      description: Fügt einen Eintrag zu einer bestehenden Todo-Liste hinzu.
+      description: Fügt einen Eintrag zu einer bestehenden todoliste hinzu.
       tags:
         - Entry
       parameters:
@@ -110,11 +105,6 @@ paths:
           schema:
             type: string
             format: uuid
-        - in: path
-          name: entry_id
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
@@ -139,6 +129,7 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '405':
           $ref: '#/components/responses/405'
+  /todolist/{list_id}/entry/{entry_id}:
     put:
       summary: Updates Entry
       description: Aktualisiert einen bestehenden Eintrag
@@ -187,7 +178,7 @@ paths:
           $ref: '#/components/responses/405'
     delete:
       summary: Deletes Entry
-      description: Löscht einen einzelnen Eintrag einer Todo-Liste.
+      description: Löscht einen einzelnen Eintrag einer todoliste.
       tags:
         - Entry
       parameters:
@@ -222,6 +213,13 @@ components:
       type: object
       properties:
         name:
+          type: string
+    accNewList:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
           type: string
     TodoEntry:
       type: object

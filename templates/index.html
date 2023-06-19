@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Willkommen bei deiner eigenen Todo Liste</h1>
+    
+
+    <p>Für deine Übersicht klicke auf <a href="http://127.0.0.1:5000/overview">Overview</a></p>
+
+    <label for="add_list">Wie man eine Liste erstellt:</label>
+    <ul id="add_list">
+        <li>Gehe zu http://127.0.0.1:5000/todo-list</li>
+        <li>Sende eine Post Request mit dem Namen der Liste</li>
+    </ul>
+
+    <label for="look_list">Wie man eine Liste ansieht:</label>
+    <ul id="look_list">
+        <li>Gehe zu http://127.0.0.1:5000/todolist/list_id</li>
+        <li>Sende eine Get Request mit der Nummer der Liste als list_id</li>
+        <li>Als Beispiel: <a href="http://127.0.0.1:5000/todolist/1318d3d1-d979-47e1-a225-dab1751dbe75">http://127.0.0.1:5000/todolist/1318d3d1-d979-47e1-a225-dab1751dbe75</a></li>
+        <li>Mit einem Delete Request kann die gewählte Liste auch gelöscht werden</li>
+    </ul>
+    
+    <label for="edit_entry">Wie man einen Eintrag ändert:</label>
+    <ul id="edit_entry">
+        <li>Gehe zu http://127.0.0.1:5000/todo-list/list_id/entry/entry_id</li>
+        <li>Sende eine Get Request mit der Nummer der Liste als list_id und die entry_id zum ermitteln des Entrys</li>
+        <li>Als Beispiel: <a href="http://127.0.0.1:5000/todolist/1318d3d1-d979-47e1-a225-dab1751dbe75/entry/17983c31-2098-46e4-85d2-2934681fd8f6">http://127.0.0.1:5000/todolist/1318d3d1-d979-47e1-a225-dab1751dbe75/entry/17983c31-2098-46e4-85d2-2934681fd8f6</a></li>
+    </ul>
+</body>
+</html>
